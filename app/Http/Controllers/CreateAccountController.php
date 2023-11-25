@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendMailJob;
 use App\Mail\RegistrationSuccessMail;
 use App\Mail\UserReportMail;
 use Illuminate\Http\Request;
@@ -47,10 +48,11 @@ class CreateAccountController extends Controller
             'email'=> $request->input('email'),
         ];
         
-        Mail::to($request->email)->send(new RegistrationSuccessMail($details)); 
-        Mail::to('admin@gmail.com')->send(new UserReportMail($details)); 
+        // Mail::to($request->email)->send(new RegistrationSuccessMail($details)); 
+        // Mail::to('admin@gmail.com')->send(new UserReportMail($details)); 
    
-
+        dispatch(new SendMailJob($details));
+    
         return redirect()->back()->with('success', 'Registration completed');
     }
 }
